@@ -16,12 +16,22 @@ public class GameController : MonoBehaviour {
 	
 	public GameObject naughtyNiceButtons;
 	
+	public GameObject kidCardPrefab;
+	
+	public GameObject nextKidObject;
+	public GameObject currentKidObject;
+	public GameObject lastKidObject;
+	
+	
+	private Animator currentKidAnimator;
+	
 	// Use this for initialization
 	void Start () {
 		debugResetButton.gameObject.SetActive(false);
 		kidValues = FindObjectOfType<KidValues>().GetComponent<KidValues>();
 		kid = FindObjectOfType<Kid>().GetComponent<Kid>();
 		playerValues = FindObjectOfType<PlayerValues>().GetComponent<PlayerValues>();
+		currentKidAnimator = currentKidObject.GetComponentInChildren<Animator>();
 		RandomizeKid();
 	}
 	
@@ -33,12 +43,36 @@ public class GameController : MonoBehaviour {
 		kid.UpdateText();
 	}
 	
+	public void SwitchKidCardsGenerateNew(){
+		//Move current kid out of the way
+		Transform currentKidChild = currentKidObject.transform.GetChild(0);
+		currentKidChild.transform.parent = lastKidObject.transform;
+		
+		//Bring next kid forward
+		Invoke ("BringNextKidForward",0.5f);
+		
+		//Repopulate next kid
+		GameObject KidCard = Instantiate(kidCardPrefab,transform.position,Quaternion.identity) as GameObject;
+		KidCard.transform.parent = nextKidObject.transform;
+	}
+	
+	private void BringNextKidForward(){
+		Transform nextKidChild = nextKidObject.transform.GetChild(0);
+		nextKidChild.transform.parent = currentKidObject.transform;
+		SpriteRenderer spriteRenderer = nextKidChild.GetComponent<SpriteRenderer>();
+		spriteRenderer.sortingOrder = 1;
+		currentKidAnimator = currentKidObject.GetComponentInChildren<Animator>();
+		
+
+	}
+	
 	public void Naughty(){
 		int debugCheerReduction = Mathf.CeilToInt((kid.naughtyNiceLevel/kid.giftLevel) * kid.believerYears);
 		Debug.Log("Cheer reduction by: " + debugCheerReduction);
 		playerValues.cheer -= Mathf.CeilToInt((kid.believerYears/kid.naughtyNiceLevel) * kid.giftLevel * 2f);
 		playerValues.budget += kid.giftLevel * 2;
 		kidsServed++;
+		SwitchKidCardsGenerateNew();
 		RandomizeKid();
 	}
 	
@@ -46,19 +80,21 @@ public class GameController : MonoBehaviour {
 		playerValues.cheer += Mathf.CeilToInt((kid.believerYears*kid.naughtyNiceLevel)/2);
 		playerValues.budget -= kid.giftLevel * 2;
 		kidsServed++;
+		SwitchKidCardsGenerateNew();
 		RandomizeKid();
 	}
 	
 	public void DebugReset(){
 		//probably going to replace this with more robust logic once I start polishing
 		failureTriggered = false;
-		naughtyNiceButtons.gameObject.SetActive(true);
+		//naughtyNiceButtons.gameObject.SetActive(true);
 		debugResetButton.gameObject.SetActive(false);
 		
 		kidsServed = 0;
 		playerValues.cheer = 75;
 		playerValues.budget = 75;
 		playerValues.failureStateTriggered = false;
+		playerValues.ClearValuesText();
 		RandomizeKid();
 		
 		
@@ -70,5 +106,17 @@ public class GameController : MonoBehaviour {
 			debugResetButton.gameObject.SetActive(true);
 			naughtyNiceButtons.gameObject.SetActive(false);
 		}
+		if (SwipeManager.IsSwipingLeft()){
+			currentKidAnimator.SetTrigger("SwipeLeft");
+			Naughty();
+		}
+		if (SwipeManager.IsSwipingRight()){
+			currentKidAnimator.SetTrigger("SwipeRight");
+			Nice();
+		}
+		
 	}
+	
+	
+	
 }
