@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour {
 		kidsServed = 0;
 		playerValues.cheer = 75;
 		playerValues.budget = 75;
+		playerValues.failureStateTriggered = false;
 		RandomizeKid();
 		
 		
