@@ -16,6 +16,15 @@ public class KidValues : MonoBehaviour {
 	public string[] gift4;
 	public string[] gift5;
 	
+	public Sprite[] backgroundSprites;
+	public Sprite[] clothingSprites;
+	public Sprite[] faceSprites;
+	public Sprite[] eyeSprites;
+	public Sprite[] mouthSprites;
+	public Sprite[] hairSprites;
+	public Sprite[] portraitSprites;
+	
+	
 	// Use this for initialization
 	void Start () {
 	

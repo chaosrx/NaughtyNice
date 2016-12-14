@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
 	
 	
 	private Animator currentKidAnimator;
+	public Animator naughtyNicePopup;
 	
 	// Use this for initialization
 	void Start () {
@@ -51,25 +52,32 @@ public class GameController : MonoBehaviour {
 		//Bring next kid forward
 		Invoke ("BringNextKidForward",0.5f);
 		
-		//Repopulate next kid
-		GameObject KidCard = Instantiate(kidCardPrefab,transform.position,Quaternion.identity) as GameObject;
-		KidCard.transform.parent = nextKidObject.transform;
 	}
 	
 	private void BringNextKidForward(){
 		Transform nextKidChild = nextKidObject.transform.GetChild(0);
 		nextKidChild.transform.parent = currentKidObject.transform;
-		SpriteRenderer spriteRenderer = nextKidChild.GetComponent<SpriteRenderer>();
-		spriteRenderer.sortingOrder = 1;
+		KidCard nextKidCard = nextKidChild.GetComponent<KidCard>();
+		nextKidCard.BringCardForward();
 		currentKidAnimator = currentKidObject.GetComponentInChildren<Animator>();
+		
+		//Repopulate next kid
+		GameObject KidCard = Instantiate(kidCardPrefab,transform.position,Quaternion.identity) as GameObject;
+		KidCard.transform.parent = nextKidObject.transform;
 		
 
 	}
 	
 	public void Naughty(){
-		int debugCheerReduction = Mathf.CeilToInt((kid.naughtyNiceLevel/kid.giftLevel) * kid.believerYears);
-		Debug.Log("Cheer reduction by: " + debugCheerReduction);
-		playerValues.cheer -= Mathf.CeilToInt((kid.believerYears/kid.naughtyNiceLevel) * kid.giftLevel * 2f);
+		naughtyNicePopup.SetTrigger("Naughty");
+		int CheerReduction = Mathf.CeilToInt((kid.believerYears/kid.naughtyNiceLevel) * kid.giftLevel * 2f);
+		if (CheerReduction == 0){
+			CheerReduction = 5;
+			Debug.Log("0 cheer triggered, adding 5");
+		}
+		Debug.Log("Cheer reduction by: " + CheerReduction);
+		
+		playerValues.cheer -= CheerReduction;
 		playerValues.budget += kid.giftLevel * 2;
 		kidsServed++;
 		SwitchKidCardsGenerateNew();
@@ -77,6 +85,8 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public void Nice(){
+		naughtyNicePopup.SetTrigger("Nice");
+		
 		playerValues.cheer += Mathf.CeilToInt((kid.believerYears*kid.naughtyNiceLevel)/2);
 		playerValues.budget -= kid.giftLevel * 2;
 		kidsServed++;
@@ -91,8 +101,8 @@ public class GameController : MonoBehaviour {
 		debugResetButton.gameObject.SetActive(false);
 		
 		kidsServed = 0;
-		playerValues.cheer = 75;
-		playerValues.budget = 75;
+		playerValues.cheer = 65;
+		playerValues.budget = 65;
 		playerValues.failureStateTriggered = false;
 		playerValues.ClearValuesText();
 		RandomizeKid();
