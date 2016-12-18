@@ -116,7 +116,10 @@
      <Compile Include="Assets\Kid.cs" />
      <Compile Include="Assets\KidCard.cs" />
      <Compile Include="Assets\KidValues.cs" />
+     <Compile Include="Assets\MusicManager.cs" />
+     <Compile Include="Assets\PlayerPrefsManager.cs" />
      <Compile Include="Assets\PlayerValues.cs" />
+     <Compile Include="Assets\SFXManager.cs" />
      <Compile Include="Assets\SwipeManager.cs" />
      <None Include="Assets\Dialogue System\_README.txt" />
      <None Include="Assets\Dialogue System\Prefabs\iOS\_README.txt" />

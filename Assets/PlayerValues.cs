@@ -8,6 +8,8 @@ public class PlayerValues : MonoBehaviour {
 	public float cheer;
 	public float budget;
 	
+	public bool failureStateTriggered = false;
+	
 	public Text playerValuesText;
 	public Text kidText;
 	public GameController gameController;
@@ -19,22 +21,26 @@ public class PlayerValues : MonoBehaviour {
 	
 	public GameObject cheerPipe;
 	public GameObject workShopPipe;
+	public GameObject blackOutCard;
 	
 	
 	// Use this for initialization
 	void Start () {
 		gameController = FindObjectOfType<GameController>().GetComponent<GameController>();
+		blackOutCard.SetActive(false);
 	}
 	
 	void UpdateKidText(){
-		kidText.text = "Game Over \n You judged " + gameController.kidsServed.ToString() + " kids \n Merry Christmas!";
+		kidText.text = "You judged " + gameController.kidsServed.ToString() + " kids \nMerry Christmas!\n\nHigh Score: "+ PlayerPrefsManager.GetHighScore().ToString();
 	}
 	
-	public bool failureStateTriggered = false;
+	
 	
 	public void FailureStates(int failureCode){
 		if(!failureStateTriggered){
+			blackOutCard.SetActive(true);
 			failureStateTriggered = true;
+			gameController.GameOverMusic();
 			if(failureCode==1){
 				playerValuesText.alignment = TextAnchor.UpperCenter;
 				playerValuesText.text = overcheerFailureStrings[Random.Range(0,overcheerFailureStrings.Length)];

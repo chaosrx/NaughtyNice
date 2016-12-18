@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 	
@@ -14,17 +15,21 @@ public class GameController : MonoBehaviour {
 	
 	public Button debugResetButton;
 	
-	public GameObject naughtyNiceButtons;
-	
 	public GameObject kidCardPrefab;
 	
 	public GameObject nextKidObject;
 	public GameObject currentKidObject;
 	public GameObject lastKidObject;
 	
+	public AudioClip positiveSound;
+	public AudioClip negativeSound;
+	public AudioClip gameOverMusic;
+	
 	
 	private Animator currentKidAnimator;
 	public Animator naughtyNicePopup;
+	private SFXManager sfxManager;
+	private MusicManager musicManager;
 	
 	// Use this for initialization
 	void Start () {
@@ -33,6 +38,9 @@ public class GameController : MonoBehaviour {
 		kid = FindObjectOfType<Kid>().GetComponent<Kid>();
 		playerValues = FindObjectOfType<PlayerValues>().GetComponent<PlayerValues>();
 		currentKidAnimator = currentKidObject.GetComponentInChildren<Animator>();
+		sfxManager = FindObjectOfType<SFXManager>().GetComponent<SFXManager>();
+		musicManager = FindObjectOfType<MusicManager>().GetComponent<MusicManager>();
+		
 		RandomizeKid();
 	}
 	
@@ -69,6 +77,7 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public void Naughty(){
+		sfxManager.playSound(negativeSound);
 		naughtyNicePopup.SetTrigger("Naughty");
 		int CheerReduction = Mathf.CeilToInt((kid.believerYears/kid.naughtyNiceLevel) * kid.giftLevel * 2f);
 		if (CheerReduction == 0){
@@ -85,6 +94,8 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public void Nice(){
+		sfxManager.playSound(positiveSound);
+		
 		naughtyNicePopup.SetTrigger("Nice");
 		
 		playerValues.cheer += Mathf.CeilToInt((kid.believerYears*kid.naughtyNiceLevel)/2);
@@ -110,19 +121,31 @@ public class GameController : MonoBehaviour {
 		
 	}
 	
+	public void GameOverMusic(){
+		musicManager.playSound(gameOverMusic);
+	}
+	
+	public void restartCurrentScene()
+	{
+		int scene = SceneManager.GetActiveScene().buildIndex;
+		SceneManager.LoadScene(scene, LoadSceneMode.Single);
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		if (failureTriggered){
+			PlayerPrefsManager.CheckSetHighScore(kidsServed);
+			
 			debugResetButton.gameObject.SetActive(true);
-			naughtyNiceButtons.gameObject.SetActive(false);
-		}
-		if (SwipeManager.IsSwipingLeft()){
-			currentKidAnimator.SetTrigger("SwipeLeft");
-			Naughty();
-		}
-		if (SwipeManager.IsSwipingRight()){
-			currentKidAnimator.SetTrigger("SwipeRight");
-			Nice();
+		} else{
+			if (SwipeManager.IsSwipingLeft()){
+				currentKidAnimator.SetTrigger("SwipeLeft");
+				Naughty();
+			}
+			if (SwipeManager.IsSwipingRight()){
+				currentKidAnimator.SetTrigger("SwipeRight");
+				Nice();
+			}
 		}
 		
 	}
