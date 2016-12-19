@@ -51,6 +51,7 @@
      <None Include="Assets\Dialogue System\Prefabs\Legacy Unity GUI Prefabs\Computer\Bitwise Font\!license.txt" />
      <None Include="Assets\Plugins\Editor\ScriptInspector3\CodeSnippets\namespace.txt" />
      <None Include="Assets\Dialogue System\Prefabs\Legacy Unity GUI Prefabs\Computer\Typing.txt" />
+     <None Include="Assets\Dialogue System\Third Party Support\_README.txt" />
      <None Include="Assets\Plugins\Editor\ScriptInspector3\SI Changes.txt" />
      <None Include="Assets\Plugins\Editor\ScriptInspector3\CodeSnippets\log.txt" />
      <None Include="Assets\Dialogue System\DLLs\_README.txt" />
@@ -74,6 +75,7 @@
      <None Include="Assets\Plugins\Editor\ScriptInspector3\CodeSnippets\catch.txt" />
      <None Include="Assets\Dialogue System\Prefabs\Legacy Unity GUI Prefabs\_README.txt" />
      <None Include="Assets\Dialogue System\Prefabs\iOS\link.xml" />
+     <None Include="Assets\Dialogue System\Documentation\_README.txt" />
      <None Include="Assets\Dialogue System\Prefabs\Legacy Unity GUI Prefabs\Necromancer\Necromancer GUI\Readme.txt" />
      <None Include="Assets\Dialogue System\Scripts\Supplemental\Utility\_README.txt" />
      <None Include="Assets\Plugins\Editor\ScriptInspector3\CodeSnippets\class.txt" />
