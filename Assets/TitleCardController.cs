@@ -9,7 +9,7 @@ public class TitleCardController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		UIcanvas.SetActive(false);
-		Invoke("EnableUI",22f);
+		Invoke("EnableUI",12f);
 	}
 	
 	void EnableUI(){
